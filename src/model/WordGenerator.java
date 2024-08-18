@@ -1,16 +1,23 @@
 package model;
 
-import controller.ReaderText;
-import view.View;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Random;
 
 public class WordGenerator {
-    Dictionary dictionary = new Dictionary();
+    Dictionary dictionary;
 
-    String chooseWord(ReaderText readerText, View view) {
-        List<String> words = dictionary.getListWords(readerText, view);
+    public Dictionary getDictionary() {
+        return dictionary;
+    }
+
+    public WordGenerator(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public String chooseWord(ReaderFile readerFile) throws FileNotFoundException {
+        List<String> words = dictionary.getListWords(readerFile);
         Random random = new Random();
         int randomLineNumber = random.nextInt(words.size());
         return words.get(randomLineNumber).toUpperCase();

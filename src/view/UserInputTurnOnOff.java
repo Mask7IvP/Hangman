@@ -1,11 +1,11 @@
-package model;
+package view;
 
-public enum Button {
+public enum UserInputTurnOnOff {
     START('1'),
     END('2');
     private final Character symbol;
 
-    Button(Character symbol) {
+    UserInputTurnOnOff(Character symbol) {
         this.symbol = symbol;
     }
 
