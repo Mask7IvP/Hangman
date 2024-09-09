@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Renderer {
-    private final String PATH_TO_FILE_TITLE = "/Title.txt";
-    private final String TEMPLATE_PATH_IMAGE_HANGMAN = "/Attempt_%d.txt";
+    private final String PATH_TO_FILE_TITLE = "Title.txt";
+    private final String TEMPLATE_PATH_IMAGE_HANGMAN = "Attempt_%d.txt";
 
     List<StringBuilder> imagesHangman = new ArrayList<>();
     StringBuilder imageTitle;
@@ -26,11 +26,11 @@ public class Renderer {
         this.imagesHangman = imagesHangman;
     }
 
-    public String getTEMPLATE_PATH_IMAGE_HANGMAN() {
+    public String getTemplatePathImageHangman() {
         return TEMPLATE_PATH_IMAGE_HANGMAN;
     }
 
-    public String getPATH_TO_FILE_TITLE() {
+    public String getPathToFileTitle() {
         return PATH_TO_FILE_TITLE;
     }
 }

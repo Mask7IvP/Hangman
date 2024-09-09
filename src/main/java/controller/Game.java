@@ -1,6 +1,6 @@
 package controller;
 
-import model.ReaderFile;
+import model.FileReader;
 import model.Validator;
 import model.Word;
 import model.WordGenerator;
@@ -12,13 +12,12 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Game {
-    View view;
-    Validator validator;
-    WordGenerator wordGenerator;
-    ReaderFile reader;
-    Word word;
-    Renderer renderer;
-    private final String REG_EX_NUMBER = "[1-2]";
+    private final View view;
+    private final Validator validator;
+    private final WordGenerator wordGenerator;
+    private final FileReader reader;
+    private final Word word;
+    private final Renderer renderer;
     private final int ATTEMPTS = 6;
     private int counterError = 0;
     private int counterAttempts = 0;
@@ -26,7 +25,7 @@ public class Game {
     private String input;
     private Set<Character> selectedLetters = new HashSet<>();
 
-    public Game(View view, Validator validator, WordGenerator wordGenerator, ReaderFile reader, Word word, Renderer renderer) {
+    public Game(View view, Validator validator, WordGenerator wordGenerator, FileReader reader, Word word, Renderer renderer) {
         this.view = view;
         this.validator = validator;
         this.wordGenerator = wordGenerator;
@@ -59,10 +58,10 @@ public class Game {
 
     private void gameIsOver() {
         if (counterAttempts > 0) {
-            view.printWin(word.getHiddenWord());
+            view.printWin(word.getHiddenText());
         } else {
             view.printHangman(counterError);
-            view.printLose(word.getHiddenWord());
+            view.printLose(word.getHiddenText());
         }
         counterAttempts = 0;
         counterError = 0;
@@ -70,15 +69,16 @@ public class Game {
     }
 
     private boolean isPressNewGame() {
-        return check(REG_EX_NUMBER) == UserInputTurnOnOff.START.getSymbol();
+        String regEx = String.format("[%s%s]", UserInputTurnOnOff.START.getSymbol(), UserInputTurnOnOff.END.getSymbol());
+        return check(regEx) == UserInputTurnOnOff.START.getSymbol();
     }
 
     private void readImageTitle() {
         StringBuilder imageTitle = renderer.getImageTitle();
         try {
-            imageTitle = reader.readFile(renderer.getPATH_TO_FILE_TITLE());
+            imageTitle = reader.read(renderer.getPathToFileTitle());
         } catch (FileNotFoundException e) {
-            view.printFileNotFound(renderer.getPATH_TO_FILE_TITLE());
+            view.printFileNotFound(renderer.getPathToFileTitle());
             System.exit(0);
         }
         renderer.setImageTitle(imageTitle);
@@ -89,10 +89,10 @@ public class Game {
         for (int i = 0; i <= ATTEMPTS; i++) {
             StringBuilder imageHangman;
             try {
-                imageHangman = reader.readFile(renderer.getTEMPLATE_PATH_IMAGE_HANGMAN().formatted(i));
+                imageHangman = reader.read(renderer.getTemplatePathImageHangman().formatted(i));
                 imagesHangmans.add(imageHangman);
             } catch (FileNotFoundException e) {
-                view.printFileNotFound(renderer.getTEMPLATE_PATH_IMAGE_HANGMAN().formatted(i));
+                view.printFileNotFound(renderer.getTemplatePathImageHangman().formatted(i));
                 System.exit(0);
             }
         }
@@ -100,7 +100,7 @@ public class Game {
     }
 
     private void makeMove() {
-        List<Character> maskWord = word.getMaskWord();
+        List<Character> maskWord = word.getMask();
         view.printProgressInfo(maskWord, counterAttempts, counterError, selectedLetters);
         view.printEnterLetter();
         char enteredLetter = check();
@@ -147,9 +147,9 @@ public class Game {
 
     public void createWord() {
         try {
-            word.setHiddenWord(wordGenerator.chooseWord(reader));
+            word.setHiddenText(wordGenerator.chooseWord(reader));
         } catch (FileNotFoundException e) {
-            view.printFileNotFound(wordGenerator.getDictionary().getFILE_NAME_DICTIONARY());
+            view.printFileNotFound(wordGenerator.getDictionary().getFileNameDictionary());
             System.exit(0);
         }
     }

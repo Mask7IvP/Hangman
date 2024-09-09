@@ -16,8 +16,8 @@ public class WordGenerator {
         this.dictionary = dictionary;
     }
 
-    public String chooseWord(ReaderFile readerFile) throws FileNotFoundException {
-        List<String> words = dictionary.getListWords(readerFile);
+    public String chooseWord(FileReader fileReader) throws FileNotFoundException {
+        List<String> words = dictionary.getListWords(fileReader);
         Random random = new Random();
         int randomLineNumber = random.nextInt(words.size());
         return words.get(randomLineNumber).toUpperCase();
